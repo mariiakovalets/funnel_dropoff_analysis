@@ -135,7 +135,13 @@ WHERE _TABLE_SUFFIX BETWEEN '20160801' AND '20170801';
 
 
 -- 07_suspicious_sources.csv
--- Кандидати на виключення: джерела з підозріло високою конверсією
+-- Кандидати на виключення: джерела з підозріло високою конверсією.
+--
+-- ORDER BY conversion_pct DESC + LIMIT 30
+-- ховає джерела з нульовою конверсією, і саме через це сюди не потрапив
+-- analytics.google.com — найбільше внутрішнє джерело в датасеті (16 172 сесії, 0 покупок).
+-- Виправлення — запит 09, який дивиться на ті самі дані без сортування за конверсією.
+-- Тут запит зберігається як є, щоб у ноутбуці лишився слід самої помилки.
 SELECT
   trafficSource.source,
   trafficSource.medium,
@@ -149,3 +155,65 @@ GROUP BY trafficSource.source, trafficSource.medium
 HAVING sessions >= 100
 ORDER BY conversion_pct DESC
 LIMIT 30;
+ 
+ 
+-- Друга ітерація: перевірка висновків, зроблених у запитах 02, 04, 05b і 07
+ 
+-- 08_session_key_check.csv
+-- Запит 02 показав 898 дублів ключа; пояснення — сесії, що перетинають північ
+-- і потрапляють у дві денні таблиці. Перевіряю це пояснення, а не приймаю на віру:
+-- якщо воно правильне, ключ із датою має збігтися з кількістю рядків.
+SELECT
+  COUNT(*)                                                                   AS rows_total,
+  COUNT(DISTINCT CONCAT(fullVisitorId, '-', CAST(visitId AS STRING)))         AS key_2,
+  COUNT(DISTINCT CONCAT(fullVisitorId, '-', CAST(visitId AS STRING), '-', date)) AS key_3
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+WHERE _TABLE_SUFFIX BETWEEN '20160801' AND '20170801';
+ 
+-- 09_internal_google_full.csv
+-- Виправлення до 07: повний перебір субдоменів google.com, без сортування
+-- за конверсією і без LIMIT. Саме цей запит визначає список виключень.
+SELECT
+  trafficSource.source,
+  trafficSource.medium,
+  COUNT(*)                                      AS sessions,
+  COUNTIF(totals.transactions IS NOT NULL)      AS purchase_sessions
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+WHERE _TABLE_SUFFIX BETWEEN '20160801' AND '20170801'
+  AND trafficSource.source LIKE '%.google.com'
+GROUP BY trafficSource.source, trafficSource.medium
+ORDER BY sessions DESC;
+ 
+-- 10_tx_revenue_hits.csv
+-- Де насправді лежить сума транзакції. Два приклади з 04b, розібрані похітово:
+-- видно, що це не рядки товарів, а перевипуск події покупки, і що кожен повтор
+-- несе власну суму, а між ними стоять хіти з NULL.
+SELECT
+  h.transaction.transactionId            AS tx_id,
+  h.hitNumber,
+  h.eCommerceAction.action_type,
+  h.transaction.transactionRevenue / 1e6 AS rev
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`,
+     UNNEST(hits) AS h
+WHERE _TABLE_SUFFIX BETWEEN '20160801' AND '20170801'
+  AND h.transaction.transactionId IN ('ORD201703041515', 'ORD201608251640')
+ORDER BY tx_id, h.hitNumber;
+ 
+-- 10b_rev_hits_distribution.csv
+-- Скільки хітів із ненульовою сумою припадає на одну транзакцію.
+-- Закриває розрив 15,8% із 05b і розбіжність 11 551 / 11 552 / 11 515 із 05.
+SELECT
+  rev_hits,
+  COUNT(*) AS tx_count
+FROM (
+  SELECT
+    h.transaction.transactionId                            AS tx_id,
+    COUNTIF(h.transaction.transactionRevenue IS NOT NULL)  AS rev_hits
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`,
+       UNNEST(hits) AS h
+  WHERE _TABLE_SUFFIX BETWEEN '20160801' AND '20170801'
+    AND h.transaction.transactionId IS NOT NULL
+  GROUP BY tx_id
+)
+GROUP BY rev_hits
+ORDER BY rev_hits;

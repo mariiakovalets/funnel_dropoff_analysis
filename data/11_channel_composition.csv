@@ -1,0 +1,25 @@
+channel,source,medium,sessions,pct_of_channel
+Affiliates,Partners,affiliate,16372,100.0
+Direct,(direct),(none),142856,100.0
+Display,dfa,cpm,5683,90.8
+Display,google,cpm,496,7.9
+Display,(direct),(none),78,1.2
+Display,(direct),cpm,2,0.0
+Organic Search,google,organic,227381,59.7
+Organic Search,(direct),(none),147055,38.6
+Organic Search,baidu,organic,3351,0.9
+Organic Search,bing,organic,1526,0.4
+Organic Search,yahoo,organic,1475,0.4
+Paid Search,google,cpc,13057,51.6
+Paid Search,(direct),(none),12232,48.4
+Paid Search,bing,cpc,1,0.0
+Referral,(direct),(none),68860,83.1
+Referral,google.com,referral,4659,5.6
+Referral,siliconvalley.about.com,referral,2095,2.5
+Referral,qiita.com,referral,1811,2.2
+Referral,blog.golang.org,referral,741,0.9
+Social,youtube.com,referral,212521,94.7
+Social,m.facebook.com,referral,3360,1.5
+Social,facebook.com,referral,2292,1.0
+Social,reddit.com,referral,2019,0.9
+Social,quora.com,referral,1545,0.7

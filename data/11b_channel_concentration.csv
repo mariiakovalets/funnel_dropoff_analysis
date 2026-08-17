@@ -1,0 +1,8 @@
+channel,sessions,distinct_sources,top_source,top_source_pct
+Organic Search,381137,13,google,59.7
+Social,224422,33,youtube.com,94.7
+Direct,142856,1,(direct),100.0
+Referral,82835,200,(direct),83.1
+Paid Search,25290,3,google,51.6
+Affiliates,16372,1,Partners,100.0
+Display,6259,3,dfa,90.8

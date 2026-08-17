@@ -1,0 +1,8 @@
+channel,sessions,direct_sourced,pct_direct_sourced,pct_return_direct,pct_return_rest,pct_true_direct,pct_referral_path
+Organic Search,381137,147045,38.6,20.7,20.7,18.0,0.0
+Direct,142856,142856,100.0,25.3,,100.0,0.0
+Referral,82835,68860,83.1,55.6,19.6,47.3,100.0
+Paid Search,25290,12230,48.4,36.7,38.7,17.1,0.0
+Display,6259,78,1.2,35.9,70.4,14.1,0.0
+Affiliates,16372,0,0.0,,23.7,,
+Social,224422,0,0.0,,6.9,,

@@ -1,0 +1,22 @@
+channel,device,sessions,viewed_strict,purchase_mono,cr_pct
+Affiliates,desktop,14803,1718,7,0.047
+Affiliates,mobile,1361,127,2,0.147
+Affiliates,tablet,208,14,0,0.0
+Direct,desktop,87980,15168,1800,2.046
+Direct,mobile,49504,5285,223,0.45
+Direct,tablet,5372,620,37,0.689
+Display,desktop,4564,1154,134,2.936
+Display,mobile,1536,286,9,0.586
+Display,tablet,159,21,0,0.0
+Organic Search,desktop,245480,43667,2823,1.15
+Organic Search,mobile,117517,16461,513,0.437
+Organic Search,tablet,18140,2469,107,0.59
+Paid Search,desktop,12657,3111,359,2.836
+Paid Search,mobile,10532,1686,93,0.883
+Paid Search,tablet,2101,267,17,0.809
+Referral,desktop,77743,24680,5199,6.687
+Referral,mobile,4543,544,9,0.198
+Referral,tablet,549,66,5,0.911
+Social,desktop,197732,3022,54,0.027
+Social,mobile,22929,1379,5,0.022
+Social,tablet,3761,176,2,0.053
